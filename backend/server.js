@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const generatePDF = (formData) => {
             const timestamp = now.toLocaleString('en-US', {
                 hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'
             });
-            const inquiryID = 'JB-' + Date.now().toString().slice(-6);
+
 
             // Colors
             const brandDark = '#1a1a1a';
@@ -42,14 +43,14 @@ const generatePDF = (formData) => {
 
             // --- HEADER SECTION ---
             doc.rect(25, 25, 545, 100).fill('#fafafa');
-            
-            doc.fillColor(brandDark).fontSize(32).font('Helvetica-Bold').text('SLAB.', 50, 45);
-            doc.fillColor(brandAccent).fontSize(9).font('Helvetica-Bold').text('PREMIUM WORKSPACE', 52, 80);
-            
+
+            const logoPath = path.join(__dirname, 'logo.png');
+            doc.image(logoPath, 50, 40, { width: 110 });
+            doc.fillColor(brandAccent).fontSize(9).font('Helvetica-Bold').text('PREMIUM WORKSPACE', 52, 95);
+
             // Right side header
-            doc.fillColor(brandDark).fontSize(24).font('Helvetica-Bold').text('JOB CARD', 0, 45, { align: 'right', width: 545, margins: { right: 50 }});
-            doc.fillColor(textGray).fontSize(10).font('Helvetica').text(`Generated: ${timestamp}`, 0, 75, { align: 'right', width: 545, margins: { right: 50 }});
-            doc.fillColor(brandAccent).fontSize(10).font('Helvetica-Bold').text(`REF: ${inquiryID}`, 0, 90, { align: 'right', width: 545, margins: { right: 50 }});
+            doc.fillColor(brandDark).fontSize(24).font('Helvetica-Bold').text('JOB CARD', 0, 45, { align: 'right', width: 545, margins: { right: 50 } });
+            doc.fillColor(textGray).fontSize(10).font('Helvetica').text(`Generated: ${timestamp}`, 0, 75, { align: 'right', width: 545, margins: { right: 50 } });
 
             doc.moveTo(25, 125).lineTo(570, 125).lineWidth(2).strokeColor(brandAccent).stroke();
 
@@ -58,7 +59,7 @@ const generatePDF = (formData) => {
             // --- HELPER TO DRAW TABLE ROWS ---
             const drawRow = (label1, val1, label2, val2, y, isGrayBg = false) => {
                 if (isGrayBg) doc.rect(40, y - 5, 515, 25).fill('#f9fafb');
-                
+
                 doc.fillColor(textGray).fontSize(10).font('Helvetica-Bold').text(label1, 50, y);
                 doc.fillColor(brandDark).font('Helvetica').text(val1 || 'N/A', 150, y, { width: 150 });
 
@@ -66,7 +67,7 @@ const generatePDF = (formData) => {
                     doc.fillColor(textGray).font('Helvetica-Bold').text(label2, 320, y);
                     doc.fillColor(brandDark).font('Helvetica').text(val2 || 'N/A', 400, y, { width: 140 });
                 }
-                
+
                 doc.moveTo(40, y + 20).lineTo(555, y + 20).lineWidth(0.5).strokeColor(lightBorder).stroke();
                 return y + 25;
             };
@@ -82,7 +83,7 @@ const generatePDF = (formData) => {
             currentY = drawRow('User Type:', formData.userType || 'Professional', 'Date:', timestamp.split(',')[0], currentY, false);
             currentY = drawRow('Full Name:', formData.fullName, 'Mobile:', formData.mobileNumber, currentY, true);
             currentY = drawRow('Email:', formData.email, '', '', currentY, false);
-            
+
             if (formData.userType === 'Professional') {
                 currentY = drawRow('Company:', formData.companyName, 'GST No:', formData.gstNumber, currentY, true);
                 currentY = drawRow('Job Role:', formData.jobRole, '', '', currentY, false);
@@ -94,7 +95,7 @@ const generatePDF = (formData) => {
 
             // --- WORKSPACE ALLOCATION TABLE ---
             currentY = drawSectionTitle('2. Workspace Allocation', currentY);
-            
+
             // Special wide row for workspace
             doc.rect(40, currentY - 5, 515, 30).fill('#f9fafb');
             doc.fillColor(textGray).fontSize(10).font('Helvetica-Bold').text('Selected Plan:', 50, currentY + 2);
@@ -111,15 +112,15 @@ const generatePDF = (formData) => {
                 });
             };
             currentY = drawRow('Start Date/Time:', formatDt(formData.startDate), 'End Date/Time:', formatDt(formData.endDate), currentY, false);
-            
+
             currentY += 20;
 
             // --- OFFICE USE ---
             currentY = drawSectionTitle('3. Authorization & Notes', currentY);
             doc.rect(40, currentY, 515, 100).lineWidth(1).strokeColor(lightBorder).stroke();
-            
+
             doc.fillColor(textGray).fontSize(10).font('Helvetica-Bold').text('Admin Remarks:', 50, currentY + 15);
-            doc.moveTo(140, currentY + 25).lineTo(530, currentY + 25).dash(2, {space: 2}).strokeColor('#d1d5db').stroke();
+            doc.moveTo(140, currentY + 25).lineTo(530, currentY + 25).dash(2, { space: 2 }).strokeColor('#d1d5db').stroke();
             doc.moveTo(50, currentY + 55).lineTo(530, currentY + 55).stroke();
             doc.moveTo(50, currentY + 85).lineTo(530, currentY + 85).stroke();
             doc.undash();
@@ -162,8 +163,8 @@ app.post('/api/contact', async (req, res) => {
 
         // 3. Send Mail (With Styled HTML Template)
         const emailHTML = `
-        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <div style="background-color: #1a1a1a; padding: 30px 20px; text-align: center;">
+        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div style="background-color: #1a1a1a; padding: 30px 20px; text-align: left;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 2px;">SLAB.</h1>
                 <p style="color: #B85C38; margin: 8px 0 0 0; font-size: 11px; font-weight: 700; letter-spacing: 3px;">PREMIUM WORKSPACE</p>
             </div>
@@ -195,7 +196,7 @@ app.post('/api/contact', async (req, res) => {
                 <p style="color: #4b5563; font-size: 15px; margin-bottom: 0; line-height: 1.6;">The complete <strong style="color: #1a1a1a;">Job Card</strong> with full requirement details, dates, and authorization fields is attached to this email as a PDF.</p>
             </div>
             
-            <div style="background-color: #f3f4f6; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+            <div style="background-color: #f3f4f6; padding: 20px; text-align: left; border-top: 1px solid #e5e7eb;">
                 <p style="margin: 0; color: #9ca3af; font-size: 11px; font-weight: 600; letter-spacing: 1px;">SYSTEM GENERATED NOTIFICATION</p>
                 <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 11px;">Slab Workspace Contact Portal</p>
             </div>
