@@ -13,6 +13,34 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
+// Initialize Mail Transporter once for better performance and stability
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // Use STARTTLS
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+    },
+    tls: {
+        rejectUnauthorized: false // Helps with some server certificates
+    },
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100
+});
+
+console.log('Server Start Time:', new Date().toLocaleString());
+
+// Verify transporter connection on startup
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('Mail Transporter Error:', error);
+    } else {
+        console.log('Mail Server is ready to take messages');
+    }
+});
+
 // Create PDF function to generate a professional job card/invoice design
 const generatePDF = (formData) => {
     return new Promise((resolve, reject) => {
@@ -152,16 +180,14 @@ app.post('/api/contact', async (req, res) => {
         // 1. Generate PDF
         const pdfBuffer = await generatePDF(formData);
 
-        // 2. Setup Mail
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_PASS,
-            },
-        });
+        // 2. Validate Environment Variables
+        if (!process.env.GMAIL_USER || !process.env.RECEIVER_EMAIL) {
+            throw new Error('Missing mail configuration in environment variables');
+        }
 
         // 3. Send Mail (With Styled HTML Template)
+        console.log(`Sending email from ${process.env.GMAIL_USER} to ${process.env.RECEIVER_EMAIL}...`);
+
         const emailHTML = `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <div style="background-color: #1a1a1a; padding: 30px 20px; text-align: left;">
@@ -203,7 +229,7 @@ app.post('/api/contact', async (req, res) => {
         </div>
         `;
 
-        await transporter.sendMail({
+        const info = await transporter.sendMail({
             from: process.env.GMAIL_USER,
             to: process.env.RECEIVER_EMAIL,
             subject: `New Slab Inquiry: ${formData.fullName}`,
@@ -217,11 +243,18 @@ app.post('/api/contact', async (req, res) => {
             ],
         });
 
-        res.status(200).json({ message: 'Email sent successfully' });
+        console.log("Email dispatched successfully. Message ID:", info.messageId);
+        res.status(200).json({ 
+            message: 'Email sent successfully',
+            messageId: info.messageId 
+        });
 
     } catch (error) {
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: 'Something went wrong' });
+        console.error("Critical Error in /api/contact:", error);
+        res.status(500).json({ 
+            error: 'Failed to process inquiry',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+        });
     }
 });
 

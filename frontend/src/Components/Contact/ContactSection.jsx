@@ -28,7 +28,7 @@ const ContactSection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Show loading state
         Swal.fire({
             title: 'Processing...',
@@ -41,12 +41,12 @@ const ContactSection = () => {
 
         try {
             // Using localhost for development - change back to production URL when deploying
-            const response = await fetch('http://localhost:5000/api/contact', {
+            const response = await fetch('https://slab.mdsdigitalhub.com/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...formData, userType })
             });
-            
+
             if (response.ok) {
                 Swal.fire({
                     icon: 'success',
