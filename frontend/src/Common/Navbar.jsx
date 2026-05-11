@@ -19,6 +19,7 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Home', href: '/' },
         { name: 'Working Places', href: '/working-places' },
+        { name: 'Investor Lounge', href: '/investor-lounge' },
         { name: 'Contact Us', href: '/contact-us' },
     ];
 
@@ -58,13 +59,6 @@ const Navbar = () => {
                             }`}>
                         </div>
 
-                        {/* CTA Button */}
-                        <a
-                            href="/contact-us"
-                            className="bg-[#9F5434] text-white px-8 py-4 rounded-none font-black text-[11px] uppercase tracking-[0.2em] hover:bg-[#1A1A1A] transition-all shadow-lg shadow-[#9F5434]/20 active:scale-95 inline-block text-center"
-                        >
-                            Booking Form
-                        </a>
 
                     </div>
 
@@ -129,9 +123,6 @@ const Navbar = () => {
                         <FiPhone className="text-[#9F5434]" />
                         8668034756
                     </div>
-                    <button className="w-full bg-[#9F5434] text-white py-5 font-black uppercase tracking-[0.2em] text-xs">
-                        Book Your Tour
-                    </button>
                 </div>
             </div>
         </>

@@ -1,57 +1,62 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Maximize2, Users, ArrowRight, ArrowUpRight } from 'lucide-react';
+import img1 from '../../assets/working-places-images/1.png'
+import img6 from '../../assets/working-places-images/6.png'
+import img16 from '../../assets/working-places-images/16.png'
+import img21 from '../../assets/working-places-images/21.png'
+import img36 from '../../assets/working-places-images/36.png'
 
 const WorkingPlaces = () => {
     const places = [
         {
             id: 1,
-            title: "Private Cabins",
-            sqft: "1200 SF",
-            capacity: "2-4 People",
-            price: "$350",
-            desc: "Premium sound-proof cabins designed for focused work and executive privacy.",
-            img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80",
+            title: "Private Executive Cabin",
+            sqft: "150-400 SF",
+            capacity: "2-7 Seater",
+            price: "₹6500",
+            desc: "Designed for focused work and high-level privacy. Sound-proof walls and ergonomic luxury furniture.",
+            img: img1,
             tag: "EXECUTIVE"
         },
         {
             id: 2,
-            title: "Workstations",
-            sqft: "2200 SF",
-            capacity: "Individual",
-            price: "$150",
-            desc: "Ergonomic setups with high-speed ports, perfect for freelancers and startups.",
-            img: "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&q=80",
-            tag: "FLEXIBLE"
+            title: "Premium Hot Desk",
+            sqft: "Shared",
+            capacity: "Open Area",
+            price: "₹2500",
+            desc: "Vibrant open environment for freelancers and digital nomads. High-speed ports and lounge access.",
+            img: img6,
+            tag: "FLEX SPACE"
         },
         {
             id: 3,
-            title: "Meeting Rooms",
-            sqft: "400 SF",
-            capacity: "10-15 People",
-            price: "$250",
-            desc: "High-end corporate meeting spaces equipped with the latest presentation tech.",
-            img: "https://images.unsplash.com/photo-1431540015161-0bf868a2d407?auto=format&fit=crop&q=80",
-            tag: "CORPORATE"
+            title: "Corporate Office",
+            sqft: "2500+ SF",
+            capacity: "Up to 30",
+            price: "₹25000",
+            desc: "Full-floor or large wing solutions for established corporate teams and scaling startups.",
+            img: img16,
+            tag: "ENTERPRISE"
         },
         {
             id: 4,
-            title: "Conference Hall",
+            title: "Conference / Board Room",
             sqft: "350 SF",
-            capacity: "20+ People",
-            price: "$500",
-            desc: "Large scale presentation rooms with 4K projectors and surround sound.",
-            img: "https://www.wework.com/ideas/wp-content/uploads/sites/4/2021/08/20201008-199WaterSt-2_v1-scaled.jpg?fit=2048%2C1152",
-            tag: "EVENTS"
+            capacity: "08 People",
+            price: "₹1200",
+            desc: "Modern meeting rooms equipped with 4K displays, whiteboards, and video conferencing tech.",
+            img: img21,
+            tag: "MEETINGS"
         },
         {
             id: 5,
-            title: "Premium Pantry",
-            sqft: "200 SF",
-            capacity: "Lounge Area",
-            price: "Free",
-            desc: "Modern pantry with premium coffee, snacks, and a relaxing break environment.",
-            img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80",
-            tag: "LIFESTYLE"
+            title: "Sleeping Pod",
+            sqft: "50 SF",
+            capacity: "01 Person",
+            price: "₹300",
+            desc: "Ergonomic nap zones for quick power naps to recharge during long work hours.",
+            img: img36,
+            tag: "WELLNESS"
         }
     ];
 
@@ -126,7 +131,12 @@ const WorkingPlaces = () => {
                                             {/* Price Tag (Mobile Only - Floating Style) */}
                                             <div className="md:hidden absolute -top-12 right-6 bg-[#EDE9D0] px-4 py-2 border-b-4 border-[#9F5434] shadow-xl">
                                                 <span className="text-[#9F5434] font-black text-xl">{place.price}</span>
-                                                <span className="text-[#1A1A1A] text-[9px] font-bold uppercase ml-1">/Mo</span>
+                                                <span className="text-[#1A1A1A] text-[9px] font-bold uppercase ml-1">
+                                                    {place.id === 1 || place.id === 2 ? '/Seat' : 
+                                                     place.id === 3 ? '/Mo' : 
+                                                     place.id === 4 ? '/4H' : 
+                                                     place.id === 5 ? '/Sft' : '/Mo'}
+                                                </span>
                                             </div>
 
                                             <div className="flex items-center gap-4 md:gap-6 mb-3 md:mb-4">
@@ -154,10 +164,12 @@ const WorkingPlaces = () => {
                                         {/* Price Box (Desktop Only) */}
                                         <div className="hidden md:flex bg-[#EDE9D0] p-12 flex-col justify-center items-center min-w-[200px] border-l border-white/20">
                                             <span className="text-[#9F5434] text-4xl font-black">{place.price}</span>
-                                            <span className="text-[#1A1A1A] text-[10px] font-bold uppercase tracking-widest mt-1">/ Per Month</span>
-                                            {/* <div className="mt-8 w-14 h-14 rounded-full border border-[#9F5434]/30 flex items-center justify-center text-[#9F5434] hover:bg-[#9F5434] hover:text-white transition-all cursor-pointer">
-                                                <ArrowUpRight size={24} />
-                                            </div> */}
+                                            <span className="text-[#1A1A1A] text-[10px] font-bold uppercase tracking-widest mt-1">
+                                                {place.id === 1 || place.id === 2 ? '/ Per Seat' : 
+                                                 place.id === 3 ? '/ Per Month' : 
+                                                 place.id === 4 ? '/ 4 Hours' : 
+                                                 place.id === 5 ? '/ Shift' : '/ Month'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

@@ -13,6 +13,25 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
+// Helper to format dates consistently across PDF and Email
+const formatDt = (dt) => {
+    if (!dt) return 'N/A';
+    const dateObj = new Date(dt);
+    if (isNaN(dateObj.getTime())) return dt.replace('T', ' ');
+    
+    // If it's just a date (no time component or exactly midnight), format as date only
+    // This handles the 'YYYY-MM-DD' format from frontend date inputs
+    if (String(dt).length <= 10) {
+        return dateObj.toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+    }
+
+    return dateObj.toLocaleString('en-US', {
+        hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'
+    });
+};
+
 // Initialize Mail Transporter once for better performance and stability
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -112,11 +131,9 @@ const generatePDF = (formData) => {
             currentY = drawRow('Full Name:', formData.fullName, 'Mobile:', formData.mobileNumber, currentY, true);
             currentY = drawRow('Email:', formData.email, '', '', currentY, false);
 
-            if (formData.userType === 'Professional') {
+            if (formData.userType === 'Professional' || !formData.userType) {
                 currentY = drawRow('Company:', formData.companyName, 'GST No:', formData.gstNumber, currentY, true);
                 currentY = drawRow('Job Role:', formData.jobRole, '', '', currentY, false);
-            } else {
-                currentY = drawRow('Institution:', formData.institutionName, 'Course:', formData.courseField, currentY, true);
             }
 
             currentY += 20;
@@ -131,15 +148,16 @@ const generatePDF = (formData) => {
             doc.moveTo(40, currentY + 25).lineTo(555, currentY + 25).lineWidth(0.5).strokeColor(lightBorder).stroke();
             currentY += 35;
 
-            const formatDt = (dt) => {
-                if (!dt) return 'N/A';
-                const dateObj = new Date(dt);
-                if (isNaN(dateObj.getTime())) return dt.replace('T', ' ');
-                return dateObj.toLocaleString('en-US', {
-                    hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'
-                });
-            };
-            currentY = drawRow('Start Date/Time:', formatDt(formData.startDate), 'End Date/Time:', formatDt(formData.endDate), currentY, false);
+
+            const isSleepingPod = formData.workspace && String(formData.workspace).includes('Sleeping Pod');
+
+            if (formData.endDate) {
+                currentY = drawRow('Start Date/Time:', formatDt(formData.startDate), 'End Date/Time:', formatDt(formData.endDate), currentY, false);
+            } else if (isSleepingPod) {
+                currentY = drawRow('Booking Date:', formatDt(formData.startDate), '', '', currentY, false);
+            } else {
+                currentY = drawRow('Starting Date:', formatDt(formData.startDate), 'Tenure/Duration:', formData.duration || 'N/A', currentY, false);
+            }
 
             currentY += 20;
 
@@ -214,7 +232,11 @@ app.post('/api/contact', async (req, res) => {
                         </tr>
                         <tr>
                             <td style="padding: 8px 0; color: #6b7280; font-weight: 600; border-top: 1px solid #e5e7eb;">Interest:</td>
-                            <td style="padding: 8px 0; color: #B85C38; font-weight: 700; border-top: 1px solid #e5e7eb;">${formData.workspace ? formData.workspace.split('-')[0].trim() : 'N/A'}</td>
+                            <td style="padding: 8px 0; color: #B85C38; font-weight: 700; border-top: 1px solid #e5e7eb;">${formData.workspace ? formData.workspace.split(' - ')[0].trim() : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #6b7280; font-weight: 600; border-top: 1px solid #e5e7eb;">${formData.endDate ? 'Timeline:' : (String(formData.workspace).includes('Sleeping Pod') ? 'Booking Date:' : 'Tenure:')}</td>
+                            <td style="padding: 8px 0; color: #1a1a1a; font-weight: 700; border-top: 1px solid #e5e7eb;">${formData.endDate ? 'Fixed Dates' : (String(formData.workspace).includes('Sleeping Pod') ? formatDt(formData.startDate) : (formData.duration || 'Monthly'))}</td>
                         </tr>
                     </table>
                 </div>

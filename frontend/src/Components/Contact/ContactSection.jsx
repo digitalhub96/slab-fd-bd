@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 const ContactSection = () => {
     // Professional-ah default-ah set panniruken mapla
-    const [userType, setUserType] = useState('Professional');
+    const userType = 'Professional';
     const [formData, setFormData] = useState({
         fullName: '',
         mobileNumber: '',
@@ -13,11 +13,10 @@ const ContactSection = () => {
         companyName: '',
         jobRole: '',
         gstNumber: '',
-        institutionName: '',
-        courseField: '',
         workspace: 'Private Executive Cabin (2-7 Seater) - ₹6500/Seat',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        duration: '1 Month'
     });
     const [status, setStatus] = useState('');
 
@@ -56,8 +55,9 @@ const ContactSection = () => {
                 });
                 setFormData({
                     fullName: '', mobileNumber: '', email: '', companyName: '', jobRole: '',
-                    gstNumber: '', institutionName: '', courseField: '',
-                    workspace: 'Private Executive Cabin (2-7 Seater) - ₹6500/Seat', startDate: '', endDate: ''
+                    gstNumber: '',
+                    workspace: 'Private Executive Cabin (2-7 Seater) - ₹6500/Seat', startDate: '', endDate: '',
+                    duration: '1 Month'
                 });
             } else {
                 Swal.fire({
@@ -90,6 +90,16 @@ const ContactSection = () => {
     const labelStyle = "text-[10px] font-black text-[#B85C38] uppercase tracking-[0.25em] ml-1";
     const inputStyle = "w-full bg-[#f8f9fa] border-2 border-transparent focus:border-[#B85C38]/20 focus:bg-white rounded-xl px-6 py-4 outline-none transition-all duration-300 font-bold text-[#1A1A1A] shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus:shadow-lg focus:shadow-[#B85C38]/5 appearance-none";
 
+    const dateTimeWorkspaces = [
+        'Conference / Board Room - ₹1200/4 Hours',
+        'Premium Hot Desk / Open Area - ₹2500/Seat',
+        'Studio - ₹10000/Day',
+        'Event & Shoot Space - ₹8000/Day'
+    ];
+
+    const isDateTimeRequired = dateTimeWorkspaces.includes(formData.workspace);
+    const isSleepingPod = formData.workspace === 'Sleeping Pod - ₹300/Shift(8Hours)';
+
     return (
         <section className="relative min-h-screen flex items-center justify-center py-10 md:py-20 bg-[#fdfdfd] overflow-hidden font-sans">
 
@@ -101,29 +111,10 @@ const ContactSection = () => {
 
                     {/* --- FORM SIDE (order-1 makes it top on mobile) --- */}
                     <div className="lg:col-span-7 bg-white p-8 md:p-16 order-1 lg:order-2">
-
                         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
                             <div>
                                 <h3 className="text-3xl font-black text-[#121212] uppercase tracking-tighter italic">Book Your <span className="text-[#B85C38]">Slab</span></h3>
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Premium Workspace Inquiry</p>
-                            </div>
-
-                            {/* Toggle Switcher */}
-                            <div className="flex bg-[#f8f9fa] p-1.5 rounded-2xl border border-gray-100 w-fit">
-                                <button
-                                    type="button"
-                                    onClick={() => setUserType('Professional')}
-                                    className={`px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${userType === 'Professional' ? 'bg-white text-[#B85C38] shadow-md' : 'text-gray-400'}`}
-                                >
-                                    Professional
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setUserType('Student')}
-                                    className={`px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${userType === 'Student' ? 'bg-white text-[#B85C38] shadow-md' : 'text-gray-400'}`}
-                                >
-                                    Student
-                                </button>
                             </div>
                         </div>
 
@@ -145,35 +136,22 @@ const ContactSection = () => {
                                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" className={inputStyle} required />
                             </div>
 
-                            {/* Dynamic Section (Professional/Student) */}
+                            {/* Professional Details Section */}
                             <div className="p-6 bg-[#B85C38]/5 rounded-[2rem] border border-[#B85C38]/10 space-y-5 transition-all">
-                                {userType === 'Professional' ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                        <div className={inputWrapper}>
-                                            <label className={labelStyle}>Company Name</label>
-                                            <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Design Agency" className={inputStyle} />
-                                        </div>
-                                        <div className={inputWrapper}>
-                                            <label className={labelStyle}>Job Role</label>
-                                            <input type="text" name="jobRole" value={formData.jobRole} onChange={handleChange} placeholder="Enter Your Job Role" className={inputStyle} />
-                                        </div>
-                                        <div className="md:col-span-2">
-                                            <label className={labelStyle}>GST Number (Optional)</label>
-                                            <input type="text" name="gstNumber" value={formData.gstNumber} onChange={handleChange} placeholder="GSTIN-000000" className={inputStyle} />
-                                        </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className={inputWrapper}>
+                                        <label className={labelStyle}>Company Name</label>
+                                        <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Design Agency" className={inputStyle} />
                                     </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                        <div className={inputWrapper}>
-                                            <label className={labelStyle}>Institution Name</label>
-                                            <input type="text" name="institutionName" value={formData.institutionName} onChange={handleChange} placeholder="University / School" className={inputStyle} />
-                                        </div>
-                                        <div className={inputWrapper}>
-                                            <label className={labelStyle}>Course / Field</label>
-                                            <input type="text" name="courseField" value={formData.courseField} onChange={handleChange} placeholder="B.Arch / Design" className={inputStyle} />
-                                        </div>
+                                    <div className={inputWrapper}>
+                                        <label className={labelStyle}>Job Role</label>
+                                        <input type="text" name="jobRole" value={formData.jobRole} onChange={handleChange} placeholder="Enter Your Job Role" className={inputStyle} />
                                     </div>
-                                )}
+                                    <div className="md:col-span-2">
+                                        <label className={labelStyle}>GST Number (Optional)</label>
+                                        <input type="text" name="gstNumber" value={formData.gstNumber} onChange={handleChange} placeholder="GSTIN-000000" className={inputStyle} />
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Workspace & Timeline */}
@@ -184,12 +162,9 @@ const ContactSection = () => {
                                         <select name="workspace" value={formData.workspace} onChange={handleChange} className={inputStyle}>
                                             <option>Private Executive Cabin (2-7 Seater) - ₹6500/Seat</option>
                                             <option>Premium Hot Desk / Open Area - ₹2500/Seat</option>
-                                            <option>Phone Booth - Free</option>
                                             <option>Corporate Office - ₹25000/Month</option>
                                             <option>Conference / Board Room - ₹1200/4 Hours</option>
-                                            <option>Lobby Lounge - Free</option>
-                                            <option>Reception Area - Free</option>
-                                            <option>Sleeping Pod</option>
+                                            <option>Sleeping Pod - ₹300/Shift(8Hours)</option>
                                             <option>Customizable Cabin</option>
                                             <option>Private Office - ₹18000</option>
                                             <option>Managed Office - ₹12000</option>
@@ -205,28 +180,66 @@ const ContactSection = () => {
 
                                 {/* Unified Date and Time Inputs Mapla */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className={inputWrapper}>
-                                        <label className={labelStyle}><FiCalendar className="inline mr-1 mb-1" /> Starting Date & Time</label>
-                                        <input
-                                            type="datetime-local"
-                                            name="startDate"
-                                            value={formData.startDate}
-                                            onChange={handleChange}
-                                            className={inputStyle + " !px-4 !text-[12px]"}
-                                            required
-                                        />
-                                    </div>
-                                    <div className={inputWrapper}>
-                                        <label className={labelStyle}><FiClock className="inline mr-1 mb-1" /> Ending Date & Time</label>
-                                        <input
-                                            type="datetime-local"
-                                            name="endDate"
-                                            value={formData.endDate}
-                                            onChange={handleChange}
-                                            className={inputStyle + " !px-4 !text-[12px]"}
-                                            required
-                                        />
-                                    </div>
+                                    {isDateTimeRequired ? (
+                                        <>
+                                            <div className={inputWrapper}>
+                                                <label className={labelStyle}><FiCalendar className="inline mr-1 mb-1" /> Starting Date & Time</label>
+                                                <input
+                                                    type="datetime-local"
+                                                    name="startDate"
+                                                    value={formData.startDate}
+                                                    onChange={handleChange}
+                                                    className={inputStyle + " !px-4 !text-[12px]"}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className={inputWrapper}>
+                                                <label className={labelStyle}><FiClock className="inline mr-1 mb-1" /> Ending Date & Time</label>
+                                                <input
+                                                    type="datetime-local"
+                                                    name="endDate"
+                                                    value={formData.endDate}
+                                                    onChange={handleChange}
+                                                    className={inputStyle + " !px-4 !text-[12px]"}
+                                                    required
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className={`${inputWrapper} ${isSleepingPod ? 'md:col-span-2' : ''}`}>
+                                                <label className={labelStyle}><FiCalendar className="inline mr-1 mb-1" /> Starting Date</label>
+                                                <input
+                                                    type="date"
+                                                    name="startDate"
+                                                    value={formData.startDate}
+                                                    onChange={handleChange}
+                                                    className={inputStyle + " !px-4 !text-[12px]"}
+                                                    required
+                                                />
+                                            </div>
+                                            {!isSleepingPod && (
+                                                <div className={inputWrapper}>
+                                                    <label className={labelStyle}><FiClock className="inline mr-1 mb-1" /> Select Tenure</label>
+                                                    <div className="relative">
+                                                        <select
+                                                            name="duration"
+                                                            value={formData.duration}
+                                                            onChange={handleChange}
+                                                            className={inputStyle + " !px-4 !text-[12px]"}
+                                                        >
+                                                            {[...Array(11)].map((_, i) => (
+                                                                <option key={i + 1} value={`${i + 1} Month${i > 0 ? 's' : ''}`}>
+                                                                    {i + 1} Month{i > 0 ? 's' : ''}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        <FiChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B85C38] pointer-events-none" size={14} />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
                                 </div>
                             </div>
 

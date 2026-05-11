@@ -7,6 +7,7 @@ import Footer from './Common/Footer'
 import Breadcrumb from './Common/Breadcrumb'
 import Contact from './Components/Contact/Contact'
 import WorkingPlaces from './Components/WorkingPlaces/WorkingPlaces'
+import InvestorLounge from './Components/InvestorLounge/InvestorLounge'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,6 +22,7 @@ function App() {
       <Route path='/' element={<Home/>} />
       <Route path='/contact-us' element={<Contact/>} />
       <Route path='/working-places' element={<WorkingPlaces/>} />
+      <Route path='/investor-lounge' element={<InvestorLounge/>} />
     </Routes>
     <Footer/>
     </BrowserRouter>
