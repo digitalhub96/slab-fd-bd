@@ -40,7 +40,7 @@ const ContactSection = () => {
 
         try {
             // Using localhost for development - change back to production URL when deploying
-            const response = await fetch('https://slab.mdsdigitalhub.com/api/contact', {
+            const response = await fetch('https://slabworkspace.com/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...formData, userType })

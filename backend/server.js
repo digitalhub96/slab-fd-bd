@@ -18,7 +18,7 @@ const formatDt = (dt) => {
     if (!dt) return 'N/A';
     const dateObj = new Date(dt);
     if (isNaN(dateObj.getTime())) return dt.replace('T', ' ');
-    
+
     // If it's just a date (no time component or exactly midnight), format as date only
     // This handles the 'YYYY-MM-DD' format from frontend date inputs
     if (String(dt).length <= 10) {
@@ -34,12 +34,12 @@ const formatDt = (dt) => {
 
 // Initialize Mail Transporter once for better performance and stability
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'immortal.herosite.pro',
     port: 587,
     secure: false, // Use STARTTLS
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
     },
     tls: {
         rejectUnauthorized: false // Helps with some server certificates
@@ -199,12 +199,12 @@ app.post('/api/contact', async (req, res) => {
         const pdfBuffer = await generatePDF(formData);
 
         // 2. Validate Environment Variables
-        if (!process.env.GMAIL_USER || !process.env.RECEIVER_EMAIL) {
+        if (!process.env.MAIL_USER || !process.env.RECEIVER_EMAIL) {
             throw new Error('Missing mail configuration in environment variables');
         }
 
         // 3. Send Mail (With Styled HTML Template)
-        console.log(`Sending email from ${process.env.GMAIL_USER} to ${process.env.RECEIVER_EMAIL}...`);
+        console.log(`Sending email from ${process.env.MAIL_USER} to ${process.env.RECEIVER_EMAIL}...`);
 
         const emailHTML = `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -252,7 +252,7 @@ app.post('/api/contact', async (req, res) => {
         `;
 
         const info = await transporter.sendMail({
-            from: process.env.GMAIL_USER,
+            from: process.env.MAIL_USER,
             to: process.env.RECEIVER_EMAIL,
             subject: `New Slab Inquiry: ${formData.fullName}`,
             text: `New inquiry received from ${formData.fullName}. Please find the attached PDF for details.`,
@@ -266,16 +266,16 @@ app.post('/api/contact', async (req, res) => {
         });
 
         console.log("Email dispatched successfully. Message ID:", info.messageId);
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'Email sent successfully',
-            messageId: info.messageId 
+            messageId: info.messageId
         });
 
     } catch (error) {
         console.error("Critical Error in /api/contact:", error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to process inquiry',
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 });
