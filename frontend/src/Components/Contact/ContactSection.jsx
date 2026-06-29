@@ -263,9 +263,9 @@ const ContactSection = () => {
 
                             <div className="space-y-6">
                                 {[
-                                    { icon: FiMail, label: "Official Email", val: "hello@slab-salem.com", link: "mailto:hello@slab-salem.com" },
+                                    { icon: FiMail, label: "Official Email", val: "info@slabworkspace.com", link: "mailto:info@slabworkspace.com" },
                                     { icon: FiPhone, label: "Direct Support", val: "+91 86680 34756", link: "tel:8668034756" },
-                                    { icon: FiMapPin, label: "Our Studio", val: "Nedunchalai Nagar, Salem, TN", link: "#" }
+                                    { icon: FiMapPin, label: "Our Studio", val: "No 4,Dla shopping plaza,steel plant main road, jagir ammapalaym,Salem, Tamil Nadu 636302, India", link: "#" }
                                 ].map((item, idx) => (
                                     <a key={idx} href={item.link} className="flex items-center gap-6 p-4 rounded-2xl hover:bg-white/5 transition-all group">
                                         <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-all duration-500">

@@ -1,7 +1,7 @@
 import React from 'react';
 // React Icons
-import {FiChevronRight,FiMail,FiPhone,FiMapPin,FiArrowUp} from 'react-icons/fi';
-import {FaInstagram,FaFacebookF,FaLinkedinIn,FaXTwitter} from 'react-icons/fa6';
+import { FiChevronRight, FiMail, FiPhone, FiMapPin, FiArrowUp } from 'react-icons/fi';
+import { FaInstagram, FaFacebookF, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import FooterLogo from '../assets/logo/1.png'
 
 const Footer = () => {
@@ -69,11 +69,11 @@ const Footer = () => {
                                 <span className="text-xs font-black tracking-[0.2em] uppercase">8668034756</span>
                             </a>
 
-                            <a href="mailto:hello@slab.com" className="flex items-center gap-4 text-[#1A1A1A]/80 hover:text-[#9F5434] transition-all group">
+                            <a href="mailto:info@slabworkspace.com" className="flex items-center gap-4 text-[#1A1A1A]/80 hover:text-[#9F5434] transition-all group">
                                 <div className="w-10 h-10 rounded-full bg-[#9F5434]/5 flex items-center justify-center group-hover:bg-[#9F5434] group-hover:text-white transition-all shadow-sm">
                                     <FiMail size={16} />
                                 </div>
-                                <span className="text-xs font-black tracking-[0.2em] uppercase">hello@slab.com</span>
+                                <span className="text-xs font-black tracking-[0.2em] uppercase">info@slabworkspace.com</span>
                             </a>
                         </div>
                     </div>
