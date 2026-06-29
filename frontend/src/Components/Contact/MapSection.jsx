@@ -18,13 +18,11 @@ const MapSection = () => {
                 <div className="absolute bottom-6 left-6 md:bottom-10 md:left-220 bg-white/90 backdrop-blur-xl p-8 shadow-2xl max-w-sm border-l-4 border-[#9F5434]">
                     <h3 className="text-[#1A1A1A] font-black uppercase tracking-widest text-sm mb-3">Our Headquarters</h3>
                     <p className="text-gray-600 text-sm leading-relaxed font-bold">
-                        No 500, Nedunchalai Nagar Main Rd,<br />
-                        Nedunchalai Nagar, Salem,<br />
-                        Tamil Nadu 636005
+                        No 4,Dla shopping plaza,steel plant main road, jagir ammapalaym,Salem, Tamil Nadu 636302, India
                     </p>
-                    <div className="mt-4 inline-block text-[#9F5434] text-[10px] font-black uppercase tracking-[0.3em] border-b border-[#9F5434]/20 pb-1 cursor-pointer hover:border-[#9F5434] transition-all">
+                    {/* <div className="mt-4 inline-block text-[#9F5434] text-[10px] font-black uppercase tracking-[0.3em] border-b border-[#9F5434]/20 pb-1 cursor-pointer hover:border-[#9F5434] transition-all">
                         Get Directions
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </section>
